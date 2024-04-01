@@ -4,34 +4,43 @@ jobs:
   desenvolvimento:
     runs-on: ubuntu-latest
     steps:
-    
       - name: Checkout the repository
         uses: actions/checkout@v4
-        
+
+      # Initialize CodeQL
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: 'java' # Specify the languages you want to analyze
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          
+
       - name: Cache Maven packages
         uses: actions/cache@v4
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-          
+
       - name: Build da API
         run: mvn -B clean install -DskipTests=true --file pom.xml
-        
+
+      # CodeQL performs the analysis on built code.
+      # So, place this step right after your build step but before any tests that might alter the build environment.
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+
       - name: Testes unitários
         run: mvn -B test --file pom.xml
-        
-      - name: Scan de Vulnerabilidades (SNYK)
-        uses: snyk/actions/maven@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
+      # - name: Scan de Vulnerabilidades (SNYK)
+        # uses: snyk/actions/maven@master
+        # env:
+          # SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           
       - name: Análise de estilo
         uses: dbelyaev/action-checkstyle@v1.7.1
