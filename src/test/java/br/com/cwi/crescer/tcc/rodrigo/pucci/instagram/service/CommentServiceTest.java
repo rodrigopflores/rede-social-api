@@ -26,22 +26,34 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * CommentServiceTest class. This class is responsible for testing the CommentService class. It uses
+ * Mockito for mocking dependencies and JUnit for running the tests.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class CommentServiceTest {
 
+  /** The CommentService object to be tested. */
   @InjectMocks private CommentService service;
 
+  /** The CommentRepository object used for comment operations. */
   @Mock private CommentRepository repository;
 
+  /** The CommentMapper object used for mapping between domain and representation objects. */
   @Mock private CommentMapper mapper;
 
+  /** The UserService object used for user operations. */
   @Mock private UserService userService;
 
+  /** The PostService object used for post operations. */
   @Mock private PostService postService;
 
+  /**
+   * Tests the createComment method of the CommentService class. It checks if the method correctly
+   * creates a comment.
+   */
   @Test
   public void deveCriarCommentQuandoInformadoCreateCommentRequest() {
-
     // Arrange
 
     User commenter = UserFixture.user();
@@ -71,6 +83,10 @@ public class CommentServiceTest {
     assertEquals(response.getId(), result.getId());
   }
 
+  /**
+   * Tests the getPostComments method of the CommentService class. It checks if the method correctly
+   * retrieves the comments of a post.
+   */
   @Test
   public void deveRestornarPageDeCommentResponseQuandoInformarPostIdEPageable() {
 

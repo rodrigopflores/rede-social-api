@@ -26,20 +26,31 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * PostServiceTest class. This class is responsible for testing the PostService class. It uses
+ * Mockito for mocking dependencies and JUnit for running the tests.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class PostServiceTest {
 
+  /** The PostService object to be tested. */
   @InjectMocks private PostService service;
 
+  /** The PostRepository object used for post operations. */
   @Mock private PostRepository repository;
 
+  /** The PostMapper object used for mapping between domain and representation objects. */
   @Mock private PostMapper mapper;
 
+  /** The UserService object used for user operations. */
   @Mock private UserService userService;
 
+  /**
+   * Tests the createPost method of the PostService class. It checks if the method correctly creates
+   * a post.
+   */
   @Test
   public void deveCriarPostComSucessoQuandoInformadoCreatePostRequest() {
-
     // Arrange
 
     CreatePostRequest request = PostFixture.createPostRequest();
@@ -66,6 +77,10 @@ public class PostServiceTest {
     assertEquals(response.getId(), result.getId());
   }
 
+  /**
+   * Tests the getUserPosts method of the PostService class. It checks if the method correctly
+   * retrieves the posts of a user.
+   */
   @Test
   public void
       deveRetornarPageDePostResponsePublicosEPrivadosDeAmigoQuandoInformarUserIdEPageable() {
@@ -104,6 +119,10 @@ public class PostServiceTest {
     assertEquals(response.getId(), result.get().collect(Collectors.toList()).get(0).getId());
   }
 
+  /**
+   * Tests the getUserPosts method of the PostService class. It checks if the method correctly
+   * retrieves the public posts of a user who is not a friend.
+   */
   @Test
   public void
       deveRetornarPageDePostResponseApenasPublicosDeUserQuandoNaoForAmigoEInformarUserIdEPageable() {
@@ -141,6 +160,10 @@ public class PostServiceTest {
     assertEquals(response.getId(), result.get().collect(Collectors.toList()).get(0).getId());
   }
 
+  /**
+   * Tests the getValidatedPostById method of the PostService class. It checks if the method
+   * correctly retrieves a post by its ID.
+   */
   @Test
   public void deveRetornarPostQuandoInformadoId() {
 
@@ -162,6 +185,10 @@ public class PostServiceTest {
     assertEquals(id, result.getId());
   }
 
+  /**
+   * Tests the getValidatedPostById method of the PostService class. It checks if the method throws
+   * an exception when the post is not found.
+   */
   @Test(expected = BusinessValidationException.class)
   public void deveLancarExceptionQuandoPostNaoForEncontrado() {
 
@@ -179,6 +206,10 @@ public class PostServiceTest {
     verify(repository).findById(id);
   }
 
+  /**
+   * Tests the likePost method of the PostService class. It checks if the method correctly likes a
+   * post.
+   */
   @Test
   public void deveCurtirPostComSucesso() {
 
@@ -200,6 +231,10 @@ public class PostServiceTest {
     verify(repository).save(post);
   }
 
+  /**
+   * Tests the likePost method of the PostService class. It checks if the method correctly unlikes a
+   * post.
+   */
   @Test
   public void deveDescurtirPostComSucesso() {
 
@@ -222,6 +257,10 @@ public class PostServiceTest {
     verify(repository).save(post);
   }
 
+  /**
+   * Tests the getUserFeed method of the PostService class. It checks if the method correctly
+   * retrieves the user's feed.
+   */
   @Test
   public void deveRetornarPageDePostResponseQuandoInformadoPageable() {
 

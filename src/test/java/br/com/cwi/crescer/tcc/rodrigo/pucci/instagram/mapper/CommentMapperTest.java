@@ -19,13 +19,23 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+/**
+ * CommentMapperTest class. This class is responsible for testing the CommentMapper class. It uses
+ * Mockito for mocking dependencies and JUnit for running the tests.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class CommentMapperTest {
 
+  /** The CommentMapper object to be tested. */
   @InjectMocks private CommentMapper mapper;
 
+  /** The UserMapper object used for mapping between domain and representation objects. */
   @Mock private UserMapper userMapper;
 
+  /**
+   * Tests the toDomain method of the CommentMapper class. It checks if the method correctly maps a
+   * CreateCommentRequest object, a User object and a Post object to a Comment object.
+   */
   @Test
   public void deveRetornarCommentQuandoInformadoCreateCommentRequestUserEPost() {
 
@@ -46,6 +56,10 @@ public class CommentMapperTest {
     assertEquals(post.getId(), result.getPost().getId());
   }
 
+  /**
+   * Tests the toCommentResponse method of the CommentMapper class. It checks if the method
+   * correctly maps a Comment object to a CommentResponse object.
+   */
   @Test
   public void toCommentResponse() {
 

@@ -21,15 +21,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * UserServiceTest class. This class is responsible for testing the UserService class. It uses
+ * Mockito for mocking dependencies and JUnit for running the tests.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
 
+  /** The UserService object to be tested. */
   @InjectMocks private UserService service;
 
+  /** The UserRepository object used for user operations. */
   @Mock private UserRepository repository;
 
+  /** The UserMapper object used for mapping between domain and representation objects. */
   @Mock private UserMapper mapper;
 
+  /**
+   * Tests the getValidatedUserById method of the UserService class. It checks if the method
+   * correctly retrieves a user by its ID.
+   */
   @Test
   public void deveRetornarUserStandardResponseDeOutroUsuarioQuandoInformarIdValido() {
 
@@ -51,6 +62,10 @@ public class UserServiceTest {
     assertEquals(id, result.getId());
   }
 
+  /**
+   * Tests the getValidatedUserById method of the UserService class. It checks if the method throws
+   * an exception when the user is not found.
+   */
   @Test(expected = BusinessValidationException.class)
   public void deveLancarExceptionQuandoInformadoIdDeUsuarioInexistente() {
 
@@ -67,6 +82,10 @@ public class UserServiceTest {
     verify(repository).findById(id);
   }
 
+  /**
+   * Tests the getUserFriendsPage method of the UserService class. It checks if the method throws an
+   * exception when the page size is greater than 50.
+   */
   @Test(expected = BusinessValidationException.class)
   public void deveLancarExceptionQuandoTamanhoDaPaginaForMaiorQueCinquenta() {
 
@@ -79,6 +98,10 @@ public class UserServiceTest {
     Page<UserStandardResponse> result = service.getUserFriendsPage(pageable);
   }
 
+  /**
+   * Tests the areFriends method of the UserService class. It checks if the method correctly
+   * identifies if two users are friends.
+   */
   @Test
   public void deveRetornarVerdeiroQuandoOsUsuariosForemAmigos() {
 
@@ -108,6 +131,10 @@ public class UserServiceTest {
     assertTrue(result);
   }
 
+  /**
+   * Tests the getUserById method of the UserService class. It checks if the method correctly
+   * retrieves a user by its ID.
+   */
   @Test
   public void deveRetornarUsuarioQuandoInformadoOId() {
 

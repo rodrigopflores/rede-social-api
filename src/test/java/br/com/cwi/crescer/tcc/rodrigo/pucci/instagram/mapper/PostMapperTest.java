@@ -16,13 +16,23 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+/**
+ * PostMapperTest class. This class is responsible for testing the PostMapper class. It uses Mockito
+ * for mocking dependencies and JUnit for running the tests.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class PostMapperTest {
 
+  /** The PostMapper object to be tested. */
   @InjectMocks private PostMapper mapper;
 
+  /** The UserMapper object used for mapping between domain and representation objects. */
   @Mock private UserMapper userMapper;
 
+  /**
+   * Tests the toDomain method of the PostMapper class. It checks if the method correctly maps a
+   * CreatePostRequest object to a Post object.
+   */
   @Test
   public void deveRetornarPostQuandoInformadoCreatePostRequest() {
 
@@ -41,6 +51,10 @@ public class PostMapperTest {
     assertEquals(request.isPrivatePost(), result.isPrivatePost());
   }
 
+  /**
+   * Tests the toPostResponse method of the PostMapper class. It checks if the method correctly maps
+   * a Post object to a PostResponse object.
+   */
   @Test
   public void deveRetornarPostResponseQuandoInformadoPost() {
 

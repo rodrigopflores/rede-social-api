@@ -10,10 +10,16 @@ import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.Us
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.UserStandardResponse;
 import org.junit.Test;
 
+/** UserMapperTest class. This class is responsible for testing the UserMapper class. */
 public class UserMapperTest {
 
+  /** The UserMapper object to be tested. */
   private final UserMapper mapper = new UserMapper();
 
+  /**
+   * Tests the toDomain method of the UserMapper class. It checks if the method correctly maps a
+   * CreateUserRequest object to a User object.
+   */
   @Test
   public void deveRetornarUmUserQuandoInformadoUmCreateUserRequest() {
 
@@ -35,6 +41,10 @@ public class UserMapperTest {
     assertEquals(request.getDateOfBirth(), result.getDateOfBirth());
   }
 
+  /**
+   * Tests the toUserStandardResponse method of the UserMapper class. It checks if the method
+   * correctly maps a User object to a UserStandardResponse object.
+   */
   @Test
   public void deveRetornarUmUserStandardResponseQuandoInformadoUmUser() {
 
@@ -57,6 +67,10 @@ public class UserMapperTest {
     assertEquals(user.getProfilePic(), result.getProfilePic());
   }
 
+  /**
+   * Tests the toUserProfileResponse method of the UserMapper class. It checks if the method
+   * correctly maps a User object to a UserProfileResponse object.
+   */
   @Test
   public void deveRetornarUserProfileResponseQuandoInformadoUser() {
 
@@ -79,6 +93,10 @@ public class UserMapperTest {
     assertEquals(user.getProfilePic(), result.getProfilePic());
   }
 
+  /**
+   * Tests the toCreateUserSecurityRequest method of the UserMapper class. It checks if the method
+   * correctly maps a CreateUserRequest object to a CreateUserSecurityRequest object.
+   */
   @Test
   public void deveRetornarCreateUserSecurityRequestQuandoInformadoCreateUserRequest() {
 

@@ -7,8 +7,17 @@ import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.Cre
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.CommentResponse;
 import java.time.LocalDateTime;
 
+/**
+ * CommentFixture class. This class is used to create dummy Comment, CreateCommentRequest and
+ * CommentResponse objects for testing purposes.
+ */
 public class CommentFixture {
 
+  /**
+   * Creates a dummy Comment object.
+   *
+   * @return The created Comment object.
+   */
   public static Comment comment() {
     Comment comment = new Comment();
     User commenter = UserFixture.user();
@@ -22,6 +31,11 @@ public class CommentFixture {
     return comment;
   }
 
+  /**
+   * Creates a dummy CreateCommentRequest object.
+   *
+   * @return The created CreateCommentRequest object.
+   */
   public static CreateCommentRequest createCommentRequest() {
     CreateCommentRequest request = new CreateCommentRequest();
     request.setPostId(2);
@@ -30,6 +44,11 @@ public class CommentFixture {
     return request;
   }
 
+  /**
+   * Creates a dummy CommentResponse object.
+   *
+   * @return The created CommentResponse object.
+   */
   public static CommentResponse commentResponse() {
     CommentResponse response = new CommentResponse();
     response.setPostId(2);
