@@ -1,9 +1,5 @@
 package br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.Post;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.User;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.exception.BusinessValidationException;
@@ -17,9 +13,11 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -61,20 +59,20 @@ public class PostServiceTest {
 
     // Act
 
-    when(userService.getUser()).thenReturn(user);
-    when(mapper.toDomain(request)).thenReturn(post);
-    when(repository.save(post)).thenReturn(post);
-    when(mapper.toPostResponse(post)).thenReturn(response);
+    Mockito.when(userService.getUser()).thenReturn(user);
+    Mockito.when(mapper.toDomain(request)).thenReturn(post);
+    Mockito.when(repository.save(post)).thenReturn(post);
+    Mockito.when(mapper.toPostResponse(post)).thenReturn(response);
 
     PostResponse result = service.createPost(request);
 
-    verify(userService).getUser();
-    verify(repository).save(post);
-    verify(mapper).toPostResponse(post);
+    Mockito.verify(userService).getUser();
+    Mockito.verify(repository).save(post);
+    Mockito.verify(mapper).toPostResponse(post);
 
     // Assert
 
-    assertEquals(response.getId(), result.getId());
+    Assertions.assertEquals(response.getId(), result.getId());
   }
 
   /**
@@ -101,22 +99,23 @@ public class PostServiceTest {
 
     // Act
 
-    when(userService.getUser()).thenReturn(user);
-    when(userService.getUserById(userId)).thenReturn(postsOwner);
-    when(repository.findByUserIdOrderByTimeDesc(postsOwner.getId(), pageable))
+    Mockito.when(userService.getUser()).thenReturn(user);
+    Mockito.when(userService.getUserById(userId)).thenReturn(postsOwner);
+    Mockito.when(repository.findByUserIdOrderByTimeDesc(postsOwner.getId(), pageable))
         .thenReturn(postsPage);
-    when(mapper.toPostResponse(post)).thenReturn(response);
+    Mockito.when(mapper.toPostResponse(post)).thenReturn(response);
 
     Page<PostResponse> result = service.getUserPosts(userId, pageable);
 
-    verify(userService).getUser();
-    verify(userService).getUserById(userId);
-    verify(repository).findByUserIdOrderByTimeDesc(postsOwner.getId(), pageable);
-    verify(mapper).toPostResponse(post);
+    Mockito.verify(userService).getUser();
+    Mockito.verify(userService).getUserById(userId);
+    Mockito.verify(repository).findByUserIdOrderByTimeDesc(postsOwner.getId(), pageable);
+    Mockito.verify(mapper).toPostResponse(post);
 
     // Assert
 
-    assertEquals(response.getId(), result.get().collect(Collectors.toList()).get(0).getId());
+    Assertions.assertEquals(
+        response.getId(), result.get().collect(Collectors.toList()).get(0).getId());
   }
 
   /**
@@ -142,22 +141,25 @@ public class PostServiceTest {
 
     // Act
 
-    when(userService.getUser()).thenReturn(user);
-    when(userService.getUserById(userId)).thenReturn(postsOwner);
-    when(repository.findByUserIdAndPrivatePostFalseOrderByTimeDesc(postsOwner.getId(), pageable))
+    Mockito.when(userService.getUser()).thenReturn(user);
+    Mockito.when(userService.getUserById(userId)).thenReturn(postsOwner);
+    Mockito.when(
+            repository.findByUserIdAndPrivatePostFalseOrderByTimeDesc(postsOwner.getId(), pageable))
         .thenReturn(postsPage);
-    when(mapper.toPostResponse(post)).thenReturn(response);
+    Mockito.when(mapper.toPostResponse(post)).thenReturn(response);
 
     Page<PostResponse> result = service.getUserPosts(userId, pageable);
 
-    verify(userService).getUser();
-    verify(userService).getUserById(userId);
-    verify(repository).findByUserIdAndPrivatePostFalseOrderByTimeDesc(postsOwner.getId(), pageable);
-    verify(mapper).toPostResponse(post);
+    Mockito.verify(userService).getUser();
+    Mockito.verify(userService).getUserById(userId);
+    Mockito.verify(repository)
+        .findByUserIdAndPrivatePostFalseOrderByTimeDesc(postsOwner.getId(), pageable);
+    Mockito.verify(mapper).toPostResponse(post);
 
     // Assert
 
-    assertEquals(response.getId(), result.get().collect(Collectors.toList()).get(0).getId());
+    Assertions.assertEquals(
+        response.getId(), result.get().collect(Collectors.toList()).get(0).getId());
   }
 
   /**
@@ -174,20 +176,20 @@ public class PostServiceTest {
 
     // Act
 
-    when(repository.findById(id)).thenReturn(Optional.of(post));
+    Mockito.when(repository.findById(id)).thenReturn(Optional.of(post));
 
     Post result = service.getValidatedPostById(id);
 
-    verify(repository).findById(id);
+    Mockito.verify(repository).findById(id);
 
     // Assert
 
-    assertEquals(id, result.getId());
+    Assertions.assertEquals(id, result.getId());
   }
 
   /**
    * Tests the getValidatedPostById method of the PostService class. It checks if the method throws
-   * an exception when the post is not found.
+   * an exception Mockito.when the post is not found.
    */
   @Test(expected = BusinessValidationException.class)
   public void deveLancarExceptionQuandoPostNaoForEncontrado() {
@@ -199,11 +201,11 @@ public class PostServiceTest {
 
     // Act
 
-    when(repository.findById(id)).thenReturn(Optional.empty());
+    Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
 
     Post result = service.getValidatedPostById(id);
 
-    verify(repository).findById(id);
+    Mockito.verify(repository).findById(id);
   }
 
   /**
@@ -221,14 +223,14 @@ public class PostServiceTest {
 
     // Act
 
-    when(userService.getUser()).thenReturn(user);
-    when(repository.findById(postId)).thenReturn(Optional.of(post));
+    Mockito.when(userService.getUser()).thenReturn(user);
+    Mockito.when(repository.findById(postId)).thenReturn(Optional.of(post));
 
     service.likePost(postId);
 
-    verify(userService).getUser();
-    verify(repository).findById(postId);
-    verify(repository).save(post);
+    Mockito.verify(userService).getUser();
+    Mockito.verify(repository).findById(postId);
+    Mockito.verify(repository).save(post);
   }
 
   /**
@@ -247,14 +249,14 @@ public class PostServiceTest {
 
     // Act
 
-    when(userService.getUser()).thenReturn(user);
-    when(repository.findById(postId)).thenReturn(Optional.of(post));
+    Mockito.when(userService.getUser()).thenReturn(user);
+    Mockito.when(repository.findById(postId)).thenReturn(Optional.of(post));
 
     service.likePost(postId);
 
-    verify(userService).getUser();
-    verify(repository).findById(postId);
-    verify(repository).save(post);
+    Mockito.verify(userService).getUser();
+    Mockito.verify(repository).findById(postId);
+    Mockito.verify(repository).save(post);
   }
 
   /**
@@ -274,21 +276,22 @@ public class PostServiceTest {
 
     // Act
 
-    when(userService.getUser()).thenReturn(user);
-    when(repository.findDistinctByUserFriendsIdOrUserIdOrderByTimeDesc(
-            user.getId(), user.getId(), pageable))
+    Mockito.when(userService.getUser()).thenReturn(user);
+    Mockito.when(
+            repository.findDistinctByUserFriendsIdOrUserIdOrderByTimeDesc(
+                user.getId(), user.getId(), pageable))
         .thenReturn(feedPage);
-    when(mapper.toPostResponse(post)).thenReturn(response);
+    Mockito.when(mapper.toPostResponse(post)).thenReturn(response);
 
     Page<PostResponse> result = service.getUserFeed(pageable);
 
-    verify(userService).getUser();
-    verify(repository)
+    Mockito.verify(userService).getUser();
+    Mockito.verify(repository)
         .findDistinctByUserFriendsIdOrUserIdOrderByTimeDesc(user.getId(), user.getId(), pageable);
-    verify(mapper).toPostResponse(post);
+    Mockito.verify(mapper).toPostResponse(post);
 
     // Assert
 
-    assertEquals(post.getId(), result.get().collect(Collectors.toList()).get(0).getId());
+    Assertions.assertEquals(post.getId(), result.get().collect(Collectors.toList()).get(0).getId());
   }
 }

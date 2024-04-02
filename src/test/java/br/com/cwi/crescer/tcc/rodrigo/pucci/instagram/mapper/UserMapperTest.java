@@ -1,7 +1,5 @@
 package br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.mapper;
 
-import static org.junit.Assert.assertEquals;
-
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.User;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.fixture.UserFixture;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.CreateUserRequest;
@@ -9,6 +7,7 @@ import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.Cre
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.UserProfileResponse;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.UserStandardResponse;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 /** UserMapperTest class. This class is responsible for testing the UserMapper class. */
 public class UserMapperTest {
@@ -33,12 +32,12 @@ public class UserMapperTest {
 
     // Assert
 
-    assertEquals(request.getNickName(), result.getNickName());
-    assertEquals(request.getFirstName(), result.getFirstName());
-    assertEquals(request.getLastName(), result.getLastName());
-    assertEquals(request.getEmail(), result.getEmail());
-    assertEquals(request.getProfilePic(), result.getProfilePic());
-    assertEquals(request.getDateOfBirth(), result.getDateOfBirth());
+    Assertions.assertEquals(request.getNickName(), result.getNickName());
+    Assertions.assertEquals(request.getFirstName(), result.getFirstName());
+    Assertions.assertEquals(request.getLastName(), result.getLastName());
+    Assertions.assertEquals(request.getEmail(), result.getEmail());
+    Assertions.assertEquals(request.getProfilePic(), result.getProfilePic());
+    Assertions.assertEquals(request.getDateOfBirth(), result.getDateOfBirth());
   }
 
   /**
@@ -58,13 +57,13 @@ public class UserMapperTest {
 
     // Assert
 
-    assertEquals(user.getId(), result.getId());
-    assertEquals(user.getFirstName(), result.getFirstName());
-    assertEquals(user.getLastName(), result.getLastName());
-    assertEquals(user.getNickName(), result.getNickName());
-    assertEquals(user.getDateOfBirth(), result.getDateOfBirth());
-    assertEquals(user.getEmail(), result.getEmail());
-    assertEquals(user.getProfilePic(), result.getProfilePic());
+    Assertions.assertEquals(user.getId(), result.getId());
+    Assertions.assertEquals(user.getFirstName(), result.getFirstName());
+    Assertions.assertEquals(user.getLastName(), result.getLastName());
+    Assertions.assertEquals(user.getNickName(), result.getNickName());
+    Assertions.assertEquals(user.getDateOfBirth(), result.getDateOfBirth());
+    Assertions.assertEquals(user.getEmail(), result.getEmail());
+    Assertions.assertEquals(user.getProfilePic(), result.getProfilePic());
   }
 
   /**
@@ -84,13 +83,13 @@ public class UserMapperTest {
 
     // Assert
 
-    assertEquals(user.getId(), result.getId());
-    assertEquals(user.getFirstName(), result.getFirstName());
-    assertEquals(user.getLastName(), result.getLastName());
-    assertEquals(user.getNickName(), result.getNickName());
-    assertEquals(user.getEmail(), result.getEmail());
-    assertEquals(user.getDateOfBirth(), result.getDateOfBirth());
-    assertEquals(user.getProfilePic(), result.getProfilePic());
+    Assertions.assertEquals(user.getId(), result.getId());
+    Assertions.assertEquals(user.getFirstName(), result.getFirstName());
+    Assertions.assertEquals(user.getLastName(), result.getLastName());
+    Assertions.assertEquals(user.getNickName(), result.getNickName());
+    Assertions.assertEquals(user.getEmail(), result.getEmail());
+    Assertions.assertEquals(user.getDateOfBirth(), result.getDateOfBirth());
+    Assertions.assertEquals(user.getProfilePic(), result.getProfilePic());
   }
 
   /**
@@ -110,9 +109,9 @@ public class UserMapperTest {
 
     // Assert
 
-    assertEquals(request.getFirstName(), result.getFirstName());
-    assertEquals(request.getLastName(), result.getLastName());
-    assertEquals(request.getEmail(), result.getEmail());
-    assertEquals(request.getPassword(), result.getPassword());
+    Assertions.assertEquals(request.getFirstName(), result.getFirstName());
+    Assertions.assertEquals(request.getLastName(), result.getLastName());
+    Assertions.assertEquals(request.getEmail(), result.getEmail());
+    Assertions.assertEquals(request.getPassword(), result.getPassword());
   }
 }

@@ -1,7 +1,12 @@
 package br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.fixture;
 
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.User;
-import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.*;
+import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.AnswerFriendRequestRequest;
+import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.ChangeUserInfoRequest;
+import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.CreateUserRequest;
+import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.CreateUserSecurityRequest;
+import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.FriendshipRequest;
+import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.LoginRequest;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.UserProfileResponse;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.UserStandardResponse;
 import java.time.LocalDate;

@@ -1,10 +1,5 @@
 package br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.User;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.exception.BusinessValidationException;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.fixture.UserFixture;
@@ -13,9 +8,11 @@ import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.repository.UserRepository;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.UserStandardResponse;
 import java.util.Optional;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,20 +48,20 @@ public class UserServiceTest {
 
     // Act
 
-    when(repository.findById(id)).thenReturn(Optional.of(foundUser));
+    Mockito.when(repository.findById(id)).thenReturn(Optional.of(foundUser));
 
     User result = service.getValidatedUserById(id);
 
-    verify(repository).findById(id);
+    Mockito.verify(repository).findById(id);
 
     // Assert
 
-    assertEquals(id, result.getId());
+    Assertions.assertEquals(id, result.getId());
   }
 
   /**
    * Tests the getValidatedUserById method of the UserService class. It checks if the method throws
-   * an exception when the user is not found.
+   * an exception Mockito.when the user is not found.
    */
   @Test(expected = BusinessValidationException.class)
   public void deveLancarExceptionQuandoInformadoIdDeUsuarioInexistente() {
@@ -75,16 +72,16 @@ public class UserServiceTest {
 
     // Act
 
-    when(repository.findById(id)).thenReturn(Optional.empty());
+    Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
 
     User result = service.getValidatedUserById(id);
 
-    verify(repository).findById(id);
+    Mockito.verify(repository).findById(id);
   }
 
   /**
    * Tests the getUserFriendsPage method of the UserService class. It checks if the method throws an
-   * exception when the page size is greater than 50.
+   * exception Mockito.when the page size is greater than 50.
    */
   @Test(expected = BusinessValidationException.class)
   public void deveLancarExceptionQuandoTamanhoDaPaginaForMaiorQueCinquenta() {
@@ -118,17 +115,17 @@ public class UserServiceTest {
 
     // Act
 
-    when(repository.findById(id1)).thenReturn(Optional.of(user1));
-    when(repository.findById(id2)).thenReturn(Optional.of(user2));
+    Mockito.when(repository.findById(id1)).thenReturn(Optional.of(user1));
+    Mockito.when(repository.findById(id2)).thenReturn(Optional.of(user2));
 
     boolean result = service.areFriends(id1, id2);
 
-    verify(repository).findById(id1);
-    verify(repository).findById(id2);
+    Mockito.verify(repository).findById(id1);
+    Mockito.verify(repository).findById(id2);
 
     // Assert
 
-    assertTrue(result);
+    Assertions.assertTrue(result);
   }
 
   /**
@@ -146,12 +143,12 @@ public class UserServiceTest {
 
     // Act
 
-    when(repository.findById(id)).thenReturn(Optional.of(user));
+    Mockito.when(repository.findById(id)).thenReturn(Optional.of(user));
 
     User result = service.getUserById(id);
 
     // Assert
 
-    assertEquals(id, result.getId());
+    Assertions.assertEquals(id, result.getId());
   }
 }

@@ -1,9 +1,5 @@
 package br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.Comment;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.Post;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.User;
@@ -17,9 +13,11 @@ import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.Co
 import java.util.Collections;
 import java.util.stream.Collectors;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -64,23 +62,23 @@ public class CommentServiceTest {
 
     // Act
 
-    when(userService.getUser()).thenReturn(commenter);
-    when(postService.getValidatedPostById(request.getPostId())).thenReturn(post);
-    when(mapper.toDomain(request, commenter, post)).thenReturn(comment);
-    when(repository.save(comment)).thenReturn(comment);
-    when(mapper.toCommentResponse(comment)).thenReturn(response);
+    Mockito.when(userService.getUser()).thenReturn(commenter);
+    Mockito.when(postService.getValidatedPostById(request.getPostId())).thenReturn(post);
+    Mockito.when(mapper.toDomain(request, commenter, post)).thenReturn(comment);
+    Mockito.when(repository.save(comment)).thenReturn(comment);
+    Mockito.when(mapper.toCommentResponse(comment)).thenReturn(response);
 
     CommentResponse result = service.createComment(request);
 
-    verify(userService).getUser();
-    verify(postService).getValidatedPostById(request.getPostId());
-    verify(mapper).toDomain(request, commenter, post);
-    verify(repository).save(comment);
-    verify(mapper).toCommentResponse(comment);
+    Mockito.verify(userService).getUser();
+    Mockito.verify(postService).getValidatedPostById(request.getPostId());
+    Mockito.verify(mapper).toDomain(request, commenter, post);
+    Mockito.verify(repository).save(comment);
+    Mockito.verify(mapper).toCommentResponse(comment);
 
     // Assert
 
-    assertEquals(response.getId(), result.getId());
+    Assertions.assertEquals(response.getId(), result.getId());
   }
 
   /**
@@ -102,18 +100,19 @@ public class CommentServiceTest {
 
     // Act
 
-    when(postService.getValidatedPostById(postId)).thenReturn(post);
-    when(repository.findByPostIdOrderByTimeAsc(postId, pageable)).thenReturn(commentPage);
-    when(mapper.toCommentResponse(comment)).thenReturn(response);
+    Mockito.when(postService.getValidatedPostById(postId)).thenReturn(post);
+    Mockito.when(repository.findByPostIdOrderByTimeAsc(postId, pageable)).thenReturn(commentPage);
+    Mockito.when(mapper.toCommentResponse(comment)).thenReturn(response);
 
     Page<CommentResponse> result = service.getPostComments(postId, pageable);
 
-    verify(postService).getValidatedPostById(postId);
-    verify(repository).findByPostIdOrderByTimeAsc(postId, pageable);
-    verify(mapper).toCommentResponse(comment);
+    Mockito.verify(postService).getValidatedPostById(postId);
+    Mockito.verify(repository).findByPostIdOrderByTimeAsc(postId, pageable);
+    Mockito.verify(mapper).toCommentResponse(comment);
 
     // Assert
 
-    assertEquals(comment.getId(), result.get().collect(Collectors.toList()).get(0).getId());
+    Assertions.assertEquals(
+        comment.getId(), result.get().collect(Collectors.toList()).get(0).getId());
   }
 }

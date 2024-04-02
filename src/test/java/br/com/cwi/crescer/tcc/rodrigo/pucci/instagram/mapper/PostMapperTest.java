@@ -1,9 +1,5 @@
 package br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.mapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.Post;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.fixture.PostFixture;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.fixture.UserFixture;
@@ -11,9 +7,11 @@ import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.Cre
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.PostResponse;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.UserStandardResponse;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 /**
@@ -46,9 +44,9 @@ public class PostMapperTest {
 
     // Assert
 
-    assertEquals(request.getMessage(), result.getMessage());
-    assertEquals(request.getImage(), result.getImage());
-    assertEquals(request.isPrivatePost(), result.isPrivatePost());
+    Assertions.assertEquals(request.getMessage(), result.getMessage());
+    Assertions.assertEquals(request.getImage(), result.getImage());
+    Assertions.assertEquals(request.isPrivatePost(), result.isPrivatePost());
   }
 
   /**
@@ -65,17 +63,18 @@ public class PostMapperTest {
 
     // Act
 
-    when(userMapper.toUserStandardResponse(post.getUser())).thenReturn(userStandardResponse);
+    Mockito.when(userMapper.toUserStandardResponse(post.getUser()))
+        .thenReturn(userStandardResponse);
 
     PostResponse result = mapper.toPostResponse(post);
 
-    verify(userMapper).toUserStandardResponse(post.getUser());
+    Mockito.verify(userMapper).toUserStandardResponse(post.getUser());
 
     // Assert
 
-    assertEquals(post.getId(), result.getId());
-    assertEquals(post.getMessage(), result.getMessage());
-    assertEquals(post.getTime(), result.getTime());
-    assertEquals(post.getImage(), result.getImage());
+    Assertions.assertEquals(post.getId(), result.getId());
+    Assertions.assertEquals(post.getMessage(), result.getMessage());
+    Assertions.assertEquals(post.getTime(), result.getTime());
+    Assertions.assertEquals(post.getImage(), result.getImage());
   }
 }
