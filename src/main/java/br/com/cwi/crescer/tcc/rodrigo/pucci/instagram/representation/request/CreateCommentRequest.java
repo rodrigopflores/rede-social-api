@@ -9,9 +9,7 @@ import lombok.Setter;
 @Setter
 public class CreateCommentRequest {
 
-    @NotNull
-    private Integer postId;
+  @NotNull private Integer postId;
 
-    @NotEmpty
-    private String content;
+  @NotEmpty private String content;
 }

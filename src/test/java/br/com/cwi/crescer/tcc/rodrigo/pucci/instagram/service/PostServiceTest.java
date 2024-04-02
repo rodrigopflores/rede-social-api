@@ -1,5 +1,9 @@
 package br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.Post;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.User;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.exception.BusinessValidationException;
@@ -9,6 +13,9 @@ import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.mapper.PostMapper;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.repository.PostRepository;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.CreatePostRequest;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.PostResponse;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,257 +26,230 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Collections;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class PostServiceTest {
 
-    @InjectMocks
-    private PostService service;
-
-    @Mock
-    private PostRepository repository;
-
-    @Mock
-    private PostMapper mapper;
-
-    @Mock
-    private UserService userService;
-
-    @Test
-    public void deveCriarPostComSucessoQuandoInformadoCreatePostRequest() {
-
-        // Arrange
-
-        CreatePostRequest request = PostFixture.createPostRequest();
-        User user = UserFixture.user();
-        Post post = PostFixture.post();
-        post.setUser(user);
-        PostResponse response = PostFixture.postResponse();
-
-        // Act
+  @InjectMocks private PostService service;
 
-        when(userService.getUser())
-                .thenReturn(user);
-        when(mapper.toDomain(request))
-                .thenReturn(post);
-        when(repository.save(post))
-                .thenReturn(post);
-        when(mapper.toPostResponse(post))
-                .thenReturn(response);
+  @Mock private PostRepository repository;
 
-        PostResponse result = service.createPost(request);
+  @Mock private PostMapper mapper;
 
-        verify(userService).getUser();
-        verify(repository).save(post);
-        verify(mapper).toPostResponse(post);
+  @Mock private UserService userService;
 
-        //Assert
+  @Test
+  public void deveCriarPostComSucessoQuandoInformadoCreatePostRequest() {
 
-        assertEquals(response.getId(), result.getId());
-    }
+    // Arrange
 
-    @Test
-    public void deveRetornarPageDePostResponsePublicosEPrivadosDeAmigoQuandoInformarUserIdEPageable() {
+    CreatePostRequest request = PostFixture.createPostRequest();
+    User user = UserFixture.user();
+    Post post = PostFixture.post();
+    post.setUser(user);
+    PostResponse response = PostFixture.postResponse();
 
-        // Arrange
+    // Act
 
-        User user = UserFixture.user();
-        User postsOwner = UserFixture.user();
-        Integer userId = 6;
-        postsOwner.setId(userId);
-        postsOwner.setFirstName("Mario");
-        postsOwner.setEmail("friend@email.com");
-        user.getFriends().add(postsOwner);
-        Post post = PostFixture.post();
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Post> postsPage = new PageImpl<>(Collections.singletonList(post), pageable, 1);
-        PostResponse response = PostFixture.postResponse();
+    when(userService.getUser()).thenReturn(user);
+    when(mapper.toDomain(request)).thenReturn(post);
+    when(repository.save(post)).thenReturn(post);
+    when(mapper.toPostResponse(post)).thenReturn(response);
 
-        // Act
+    PostResponse result = service.createPost(request);
 
-        when(userService.getUser())
-                .thenReturn(user);
-        when(userService.getUserById(userId))
-                .thenReturn(postsOwner);
-        when(repository.findByUserIdOrderByTimeDesc(postsOwner.getId(), pageable))
-                .thenReturn(postsPage);
-        when(mapper.toPostResponse(post))
-                .thenReturn(response);
+    verify(userService).getUser();
+    verify(repository).save(post);
+    verify(mapper).toPostResponse(post);
 
-        Page<PostResponse> result = service.getUserPosts(userId, pageable);
+    // Assert
 
-        verify(userService).getUser();
-        verify(userService).getUserById(userId);
-        verify(repository).findByUserIdOrderByTimeDesc(postsOwner.getId(), pageable);
-        verify(mapper).toPostResponse(post);
+    assertEquals(response.getId(), result.getId());
+  }
 
-        //Assert
+  @Test
+  public void
+      deveRetornarPageDePostResponsePublicosEPrivadosDeAmigoQuandoInformarUserIdEPageable() {
 
-        assertEquals(response.getId(), result.get().collect(Collectors.toList()).get(0).getId());
-    }
+    // Arrange
 
-    @Test
-    public void deveRetornarPageDePostResponseApenasPublicosDeUserQuandoNaoForAmigoEInformarUserIdEPageable() {
+    User user = UserFixture.user();
+    User postsOwner = UserFixture.user();
+    Integer userId = 6;
+    postsOwner.setId(userId);
+    postsOwner.setFirstName("Mario");
+    postsOwner.setEmail("friend@email.com");
+    user.getFriends().add(postsOwner);
+    Post post = PostFixture.post();
+    Pageable pageable = PageRequest.of(0, 5);
+    Page<Post> postsPage = new PageImpl<>(Collections.singletonList(post), pageable, 1);
+    PostResponse response = PostFixture.postResponse();
 
-        // Arrange
+    // Act
 
-        User user = UserFixture.user();
-        User postsOwner = UserFixture.user();
-        Integer userId = 6;
-        postsOwner.setId(userId);
-        postsOwner.setFirstName("Mario");
-        postsOwner.setEmail("friend@email.com");
-        Post post = PostFixture.post();
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Post> postsPage = new PageImpl<>(Collections.singletonList(post), pageable, 1);
-        PostResponse response = PostFixture.postResponse();
+    when(userService.getUser()).thenReturn(user);
+    when(userService.getUserById(userId)).thenReturn(postsOwner);
+    when(repository.findByUserIdOrderByTimeDesc(postsOwner.getId(), pageable))
+        .thenReturn(postsPage);
+    when(mapper.toPostResponse(post)).thenReturn(response);
 
-        // Act
+    Page<PostResponse> result = service.getUserPosts(userId, pageable);
 
-        when(userService.getUser())
-                .thenReturn(user);
-        when(userService.getUserById(userId))
-                .thenReturn(postsOwner);
-        when(repository.findByUserIdAndPrivatePostFalseOrderByTimeDesc(postsOwner.getId(), pageable))
-                .thenReturn(postsPage);
-        when(mapper.toPostResponse(post))
-                .thenReturn(response);
+    verify(userService).getUser();
+    verify(userService).getUserById(userId);
+    verify(repository).findByUserIdOrderByTimeDesc(postsOwner.getId(), pageable);
+    verify(mapper).toPostResponse(post);
 
-        Page<PostResponse> result = service.getUserPosts(userId, pageable);
+    // Assert
 
-        verify(userService).getUser();
-        verify(userService).getUserById(userId);
-        verify(repository).findByUserIdAndPrivatePostFalseOrderByTimeDesc(postsOwner.getId(), pageable);
-        verify(mapper).toPostResponse(post);
+    assertEquals(response.getId(), result.get().collect(Collectors.toList()).get(0).getId());
+  }
 
-        //Assert
+  @Test
+  public void
+      deveRetornarPageDePostResponseApenasPublicosDeUserQuandoNaoForAmigoEInformarUserIdEPageable() {
 
-        assertEquals(response.getId(), result.get().collect(Collectors.toList()).get(0).getId());
-    }
+    // Arrange
 
-    @Test
-    public void deveRetornarPostQuandoInformadoId() {
+    User user = UserFixture.user();
+    User postsOwner = UserFixture.user();
+    Integer userId = 6;
+    postsOwner.setId(userId);
+    postsOwner.setFirstName("Mario");
+    postsOwner.setEmail("friend@email.com");
+    Post post = PostFixture.post();
+    Pageable pageable = PageRequest.of(0, 5);
+    Page<Post> postsPage = new PageImpl<>(Collections.singletonList(post), pageable, 1);
+    PostResponse response = PostFixture.postResponse();
 
-        // Arrange
+    // Act
 
-        Post post = PostFixture.post();
-        Integer id = 2;
+    when(userService.getUser()).thenReturn(user);
+    when(userService.getUserById(userId)).thenReturn(postsOwner);
+    when(repository.findByUserIdAndPrivatePostFalseOrderByTimeDesc(postsOwner.getId(), pageable))
+        .thenReturn(postsPage);
+    when(mapper.toPostResponse(post)).thenReturn(response);
 
-        // Act
+    Page<PostResponse> result = service.getUserPosts(userId, pageable);
 
-        when(repository.findById(id))
-                .thenReturn(Optional.of(post));
+    verify(userService).getUser();
+    verify(userService).getUserById(userId);
+    verify(repository).findByUserIdAndPrivatePostFalseOrderByTimeDesc(postsOwner.getId(), pageable);
+    verify(mapper).toPostResponse(post);
 
-        Post result = service.getValidatedPostById(id);
+    // Assert
 
-        verify(repository).findById(id);
+    assertEquals(response.getId(), result.get().collect(Collectors.toList()).get(0).getId());
+  }
 
-        //Assert
+  @Test
+  public void deveRetornarPostQuandoInformadoId() {
 
-        assertEquals(id, result.getId());
-    }
+    // Arrange
 
-    @Test(expected = BusinessValidationException.class)
-    public void deveLancarExceptionQuandoPostNaoForEncontrado() {
+    Post post = PostFixture.post();
+    Integer id = 2;
 
-        // Arrange
+    // Act
 
-        Post post = PostFixture.post();
-        Integer id = 2;
+    when(repository.findById(id)).thenReturn(Optional.of(post));
 
-        // Act
+    Post result = service.getValidatedPostById(id);
 
-        when(repository.findById(id))
-                .thenReturn(Optional.empty());
+    verify(repository).findById(id);
 
-        Post result = service.getValidatedPostById(id);
+    // Assert
 
-        verify(repository).findById(id);
-    }
+    assertEquals(id, result.getId());
+  }
 
-    @Test
-    public void deveCurtirPostComSucesso() {
+  @Test(expected = BusinessValidationException.class)
+  public void deveLancarExceptionQuandoPostNaoForEncontrado() {
 
-        // Arrange
+    // Arrange
 
-        User user = UserFixture.user();
-        Post post = PostFixture.post();
-        Integer postId = 2;
+    Post post = PostFixture.post();
+    Integer id = 2;
 
-        // Act
+    // Act
 
-        when(userService.getUser())
-                .thenReturn(user);
-        when(repository.findById(postId))
-                .thenReturn(Optional.of(post));
+    when(repository.findById(id)).thenReturn(Optional.empty());
 
-        service.likePost(postId);
+    Post result = service.getValidatedPostById(id);
 
-        verify(userService).getUser();
-        verify(repository).findById(postId);
-        verify(repository).save(post);
-    }
+    verify(repository).findById(id);
+  }
 
-    @Test
-    public void deveDescurtirPostComSucesso() {
+  @Test
+  public void deveCurtirPostComSucesso() {
 
-        // Arrange
+    // Arrange
 
-        User user = UserFixture.user();
-        Post post = PostFixture.post();
-        post.getLikes().add(user);
-        Integer postId = 2;
+    User user = UserFixture.user();
+    Post post = PostFixture.post();
+    Integer postId = 2;
 
-        // Act
+    // Act
 
-        when(userService.getUser())
-                .thenReturn(user);
-        when(repository.findById(postId))
-                .thenReturn(Optional.of(post));
+    when(userService.getUser()).thenReturn(user);
+    when(repository.findById(postId)).thenReturn(Optional.of(post));
 
-        service.likePost(postId);
+    service.likePost(postId);
 
-        verify(userService).getUser();
-        verify(repository).findById(postId);
-        verify(repository).save(post);
-    }
+    verify(userService).getUser();
+    verify(repository).findById(postId);
+    verify(repository).save(post);
+  }
 
-    @Test
-    public void deveRetornarPageDePostResponseQuandoInformadoPageable() {
+  @Test
+  public void deveDescurtirPostComSucesso() {
 
-        // Arrange
+    // Arrange
 
-        User user = UserFixture.user();
-        Post post = PostFixture.post();
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Post> feedPage = new PageImpl<>(Collections.singletonList(post), pageable, 1);
-        PostResponse response = PostFixture.postResponse();
+    User user = UserFixture.user();
+    Post post = PostFixture.post();
+    post.getLikes().add(user);
+    Integer postId = 2;
 
+    // Act
 
-        // Act
+    when(userService.getUser()).thenReturn(user);
+    when(repository.findById(postId)).thenReturn(Optional.of(post));
 
-        when(userService.getUser())
-                .thenReturn(user);
-        when(repository.findDistinctByUserFriendsIdOrUserIdOrderByTimeDesc(user.getId(), user.getId(), pageable))
-                .thenReturn(feedPage);
-        when(mapper.toPostResponse(post))
-                .thenReturn(response);
+    service.likePost(postId);
 
-        Page<PostResponse> result = service.getUserFeed(pageable);
+    verify(userService).getUser();
+    verify(repository).findById(postId);
+    verify(repository).save(post);
+  }
 
-        verify(userService).getUser();
-        verify(repository).findDistinctByUserFriendsIdOrUserIdOrderByTimeDesc(user.getId(), user.getId(), pageable);
-        verify(mapper).toPostResponse(post);
+  @Test
+  public void deveRetornarPageDePostResponseQuandoInformadoPageable() {
 
-        // Assert
+    // Arrange
 
-        assertEquals(post.getId(), result.get().collect(Collectors.toList()).get(0).getId());
-    }
+    User user = UserFixture.user();
+    Post post = PostFixture.post();
+    Pageable pageable = PageRequest.of(0, 5);
+    Page<Post> feedPage = new PageImpl<>(Collections.singletonList(post), pageable, 1);
+    PostResponse response = PostFixture.postResponse();
+
+    // Act
+
+    when(userService.getUser()).thenReturn(user);
+    when(repository.findDistinctByUserFriendsIdOrUserIdOrderByTimeDesc(
+            user.getId(), user.getId(), pageable))
+        .thenReturn(feedPage);
+    when(mapper.toPostResponse(post)).thenReturn(response);
+
+    Page<PostResponse> result = service.getUserFeed(pageable);
+
+    verify(userService).getUser();
+    verify(repository)
+        .findDistinctByUserFriendsIdOrUserIdOrderByTimeDesc(user.getId(), user.getId(), pageable);
+    verify(mapper).toPostResponse(post);
+
+    // Assert
+
+    assertEquals(post.getId(), result.get().collect(Collectors.toList()).get(0).getId());
+  }
 }

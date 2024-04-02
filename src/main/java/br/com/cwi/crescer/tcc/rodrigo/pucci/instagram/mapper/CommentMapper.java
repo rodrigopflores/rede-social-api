@@ -13,30 +13,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommentMapper {
 
-    private static ModelMapper modelMapper = new ModelMapper();
+  private static final ModelMapper modelMapper = new ModelMapper();
 
-    @Autowired
-    private UserMapper userMapper;
+  @Autowired private UserMapper userMapper;
 
-    public Comment toDomain(CreateCommentRequest request, User commenter, Post post) {
-        Comment comment = new Comment();
-        comment.setContent(request.getContent());
-        comment.setCommenter(commenter);
-        comment.setPost(post);
+  public Comment toDomain(CreateCommentRequest request, User commenter, Post post) {
+    Comment comment = new Comment();
+    comment.setContent(request.getContent());
+    comment.setCommenter(commenter);
+    comment.setPost(post);
 
-        return comment;
-    }
+    return comment;
+  }
 
-    public CommentResponse toCommentResponse(Comment comment) {
-        CommentResponse response = new CommentResponse();
-        UserStandardResponse commenter = userMapper.toUserStandardResponse(comment.getCommenter());
-        response.setCommenter(commenter);
-        response.setId(comment.getId());
-        response.setPostId(comment.getPost().getId());
-        response.setTime(comment.getTime());
-        response.setContent(comment.getContent());
+  public CommentResponse toCommentResponse(Comment comment) {
+    CommentResponse response = new CommentResponse();
+    UserStandardResponse commenter = userMapper.toUserStandardResponse(comment.getCommenter());
+    response.setCommenter(commenter);
+    response.setId(comment.getId());
+    response.setPostId(comment.getPost().getId());
+    response.setTime(comment.getTime());
+    response.setContent(comment.getContent());
 
-        return response;
-
-    }
+    return response;
+  }
 }

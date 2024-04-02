@@ -9,12 +9,9 @@ import lombok.Setter;
 @Setter
 public class CreatePostRequest {
 
-    @NotEmpty
-    private String message;
+  @NotEmpty private String message;
 
-    private String image;
+  private String image;
 
-    @NotNull
-    private boolean privatePost;
-
+  @NotNull private boolean privatePost;
 }

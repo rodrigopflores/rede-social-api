@@ -14,33 +14,30 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/publico/user")
 public class UserPublicController {
 
-    @Autowired
-    private UserService service;
+  @Autowired private UserService service;
 
-    @Autowired
-    private TokenService tokenService;
+  @Autowired private TokenService tokenService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+  @Autowired private AuthenticationManager authenticationManager;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserStandardResponse createUser(@Valid @RequestBody CreateUserRequest request) {
-        return service.createUser(request);
-    }
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public UserStandardResponse createUser(@Valid @RequestBody CreateUserRequest request) {
+    return service.createUser(request);
+  }
 
-    @PostMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
-    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
-        var auth = authenticationManager.authenticate(usernamePassword);
-        var token = tokenService.generateToken((User) auth.getPrincipal());
+  @PostMapping("/login")
+  @ResponseStatus(HttpStatus.OK)
+  public LoginResponse login(@Valid @RequestBody LoginRequest request) {
+    var usernamePassword =
+        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
+    var auth = authenticationManager.authenticate(usernamePassword);
+    var token = tokenService.generateToken((User) auth.getPrincipal());
 
-        return new LoginResponse(token);
-    }
+    return new LoginResponse(token);
+  }
 }

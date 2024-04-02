@@ -1,11 +1,17 @@
 package br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.User;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.exception.BusinessValidationException;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.fixture.UserFixture;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.mapper.UserMapper;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.repository.UserRepository;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.UserStandardResponse;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,130 +21,110 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
 
-    @InjectMocks
-    private UserService service;
+  @InjectMocks private UserService service;
 
-    @Mock
-    private UserRepository repository;
+  @Mock private UserRepository repository;
 
-    @Mock
-    private UserMapper mapper;
+  @Mock private UserMapper mapper;
 
+  @Test
+  public void deveRetornarUserStandardResponseDeOutroUsuarioQuandoInformarIdValido() {
 
-    @Test
-    public void deveRetornarUserStandardResponseDeOutroUsuarioQuandoInformarIdValido() {
+    // Arrange
 
-        // Arrange
+    Integer id = 3;
+    User foundUser = UserFixture.user();
 
-        Integer id = 3;
-        User foundUser = UserFixture.user();
+    // Act
 
-        // Act
+    when(repository.findById(id)).thenReturn(Optional.of(foundUser));
 
-        when(repository.findById(id))
-                .thenReturn(Optional.of(foundUser));
+    User result = service.getValidatedUserById(id);
 
-        User result = service.getValidatedUserById(id);
+    verify(repository).findById(id);
 
-        verify(repository).findById(id);
+    // Assert
 
-        // Assert
+    assertEquals(id, result.getId());
+  }
 
-        assertEquals(id, result.getId());
-    }
+  @Test(expected = BusinessValidationException.class)
+  public void deveLancarExceptionQuandoInformadoIdDeUsuarioInexistente() {
 
-    @Test(expected = BusinessValidationException.class)
-    public void deveLancarExceptionQuandoInformadoIdDeUsuarioInexistente() {
+    // Arrange
 
-        // Arrange
+    Integer id = 3;
 
-        Integer id = 3;
+    // Act
 
-        // Act
+    when(repository.findById(id)).thenReturn(Optional.empty());
 
-        when(repository.findById(id))
-                .thenReturn(Optional.empty());
+    User result = service.getValidatedUserById(id);
 
-        User result = service.getValidatedUserById(id);
+    verify(repository).findById(id);
+  }
 
-        verify(repository).findById(id);
-    }
+  @Test(expected = BusinessValidationException.class)
+  public void deveLancarExceptionQuandoTamanhoDaPaginaForMaiorQueCinquenta() {
 
+    // Arrange
 
+    Pageable pageable = PageRequest.of(0, 51);
 
-    @Test(expected = BusinessValidationException.class)
-    public void deveLancarExceptionQuandoTamanhoDaPaginaForMaiorQueCinquenta() {
+    // Act
 
-        // Arrange
+    Page<UserStandardResponse> result = service.getUserFriendsPage(pageable);
+  }
 
-        Pageable pageable = PageRequest.of(0, 51);
+  @Test
+  public void deveRetornarVerdeiroQuandoOsUsuariosForemAmigos() {
 
-        // Act
+    // Arrange
+    User user1 = UserFixture.user();
+    Integer id1 = 2;
+    user1.setId(id1);
+    User user2 = UserFixture.user();
+    Integer id2 = 6;
+    user2.setId(id2);
+    user2.setEmail("friend@email.com");
+    user1.getFriends().add(user2);
+    user2.getFriends().add(user1);
 
-        Page<UserStandardResponse> result = service.getUserFriendsPage(pageable);
-    }
+    // Act
 
-    @Test
-    public void deveRetornarVerdeiroQuandoOsUsuariosForemAmigos() {
+    when(repository.findById(id1)).thenReturn(Optional.of(user1));
+    when(repository.findById(id2)).thenReturn(Optional.of(user2));
 
-        // Arrange
-        User user1 = UserFixture.user();
-        Integer id1 = 2;
-        user1.setId(id1);
-        User user2 = UserFixture.user();
-        Integer id2 = 6;
-        user2.setId(id2);
-        user2.setEmail("friend@email.com");
-        user1.getFriends().add(user2);
-        user2.getFriends().add(user1);
+    boolean result = service.areFriends(id1, id2);
 
-        // Act
+    verify(repository).findById(id1);
+    verify(repository).findById(id2);
 
-        when(repository.findById(id1))
-                .thenReturn(Optional.of(user1));
-        when(repository.findById(id2))
-                .thenReturn(Optional.of(user2));
+    // Assert
 
-        boolean result = service.areFriends(id1, id2);
+    assertTrue(result);
+  }
 
-        verify(repository).findById(id1);
-        verify(repository).findById(id2);
+  @Test
+  public void deveRetornarUsuarioQuandoInformadoOId() {
 
-        // Assert
+    // Arrange
 
-        assertTrue(result);
+    User user = UserFixture.user();
+    Integer id = 2;
+    user.setId(id);
 
-    }
+    // Act
 
-    @Test
-    public void deveRetornarUsuarioQuandoInformadoOId() {
+    when(repository.findById(id)).thenReturn(Optional.of(user));
 
-        // Arrange
+    User result = service.getUserById(id);
 
-        User user = UserFixture.user();
-        Integer id = 2;
-        user.setId(id);
+    // Assert
 
-        // Act
-
-        when(repository.findById(id))
-                .thenReturn(Optional.of(user));
-
-        User result = service.getUserById(id);
-
-        // Assert
-
-        assertEquals(id, result.getId());
-
-    }
+    assertEquals(id, result.getId());
+  }
 }

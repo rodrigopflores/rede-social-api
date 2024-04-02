@@ -1,5 +1,7 @@
 package br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.mapper;
 
+import static org.junit.Assert.assertEquals;
+
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.User;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.fixture.UserFixture;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.CreateUserRequest;
@@ -8,97 +10,91 @@ import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.Us
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.UserStandardResponse;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 public class UserMapperTest {
 
-    private UserMapper mapper = new UserMapper();
+  private final UserMapper mapper = new UserMapper();
 
-    @Test
-    public void deveRetornarUmUserQuandoInformadoUmCreateUserRequest() {
+  @Test
+  public void deveRetornarUmUserQuandoInformadoUmCreateUserRequest() {
 
-        // Arrange
+    // Arrange
 
-        CreateUserRequest request = UserFixture.createUserRequest();
+    CreateUserRequest request = UserFixture.createUserRequest();
 
-        // Act
+    // Act
 
-        User result = mapper.toDomain(request);
+    User result = mapper.toDomain(request);
 
-        // Assert
+    // Assert
 
-        assertEquals(request.getNickName(), result.getNickName());
-        assertEquals(request.getFirstName(), result.getFirstName());
-        assertEquals(request.getLastName(), result.getLastName());
-        assertEquals(request.getEmail(), result.getEmail());
-        assertEquals(request.getProfilePic(), result.getProfilePic());
-        assertEquals(request.getDateOfBirth(), result.getDateOfBirth());
+    assertEquals(request.getNickName(), result.getNickName());
+    assertEquals(request.getFirstName(), result.getFirstName());
+    assertEquals(request.getLastName(), result.getLastName());
+    assertEquals(request.getEmail(), result.getEmail());
+    assertEquals(request.getProfilePic(), result.getProfilePic());
+    assertEquals(request.getDateOfBirth(), result.getDateOfBirth());
+  }
 
-    }
+  @Test
+  public void deveRetornarUmUserStandardResponseQuandoInformadoUmUser() {
 
-    @Test
-    public void deveRetornarUmUserStandardResponseQuandoInformadoUmUser() {
+    // Arrange
 
-        // Arrange
+    User user = UserFixture.user();
 
-        User user = UserFixture.user();
+    // Act
 
-        // Act
+    UserStandardResponse result = mapper.toUserStandardResponse(user);
 
-        UserStandardResponse result = mapper.toUserStandardResponse(user);
+    // Assert
 
-        // Assert
+    assertEquals(user.getId(), result.getId());
+    assertEquals(user.getFirstName(), result.getFirstName());
+    assertEquals(user.getLastName(), result.getLastName());
+    assertEquals(user.getNickName(), result.getNickName());
+    assertEquals(user.getDateOfBirth(), result.getDateOfBirth());
+    assertEquals(user.getEmail(), result.getEmail());
+    assertEquals(user.getProfilePic(), result.getProfilePic());
+  }
 
-        assertEquals(user.getId(), result.getId());
-        assertEquals(user.getFirstName(), result.getFirstName());
-        assertEquals(user.getLastName(), result.getLastName());
-        assertEquals(user.getNickName(), result.getNickName());
-        assertEquals(user.getDateOfBirth(), result.getDateOfBirth());
-        assertEquals(user.getEmail(), result.getEmail());
-        assertEquals(user.getProfilePic(), result.getProfilePic());
+  @Test
+  public void deveRetornarUserProfileResponseQuandoInformadoUser() {
 
-    }
+    // Arrange
 
+    User user = UserFixture.user();
 
-    @Test
-    public void deveRetornarUserProfileResponseQuandoInformadoUser() {
+    // Act
 
-        // Arrange
+    UserProfileResponse result = mapper.toUserProfileResponse(user);
 
-        User user = UserFixture.user();
+    // Assert
 
-        // Act
+    assertEquals(user.getId(), result.getId());
+    assertEquals(user.getFirstName(), result.getFirstName());
+    assertEquals(user.getLastName(), result.getLastName());
+    assertEquals(user.getNickName(), result.getNickName());
+    assertEquals(user.getEmail(), result.getEmail());
+    assertEquals(user.getDateOfBirth(), result.getDateOfBirth());
+    assertEquals(user.getProfilePic(), result.getProfilePic());
+  }
 
-        UserProfileResponse result = mapper.toUserProfileResponse(user);
+  @Test
+  public void deveRetornarCreateUserSecurityRequestQuandoInformadoCreateUserRequest() {
 
-        // Assert
+    // Arrange
 
-        assertEquals(user.getId(), result.getId());
-        assertEquals(user.getFirstName(), result.getFirstName());
-        assertEquals(user.getLastName(), result.getLastName());
-        assertEquals(user.getNickName(), result.getNickName());
-        assertEquals(user.getEmail(), result.getEmail());
-        assertEquals(user.getDateOfBirth(), result.getDateOfBirth());
-        assertEquals(user.getProfilePic(), result.getProfilePic());
-    }
+    CreateUserRequest request = UserFixture.createUserRequest();
 
-    @Test
-    public void deveRetornarCreateUserSecurityRequestQuandoInformadoCreateUserRequest() {
+    // Act
 
-        // Arrange
+    CreateUserSecurityRequest result = mapper.toCreateUserSecurityRequest(request);
 
-        CreateUserRequest request = UserFixture.createUserRequest();
+    // Assert
 
-        // Act
-
-        CreateUserSecurityRequest result = mapper.toCreateUserSecurityRequest(request);
-
-        // Assert
-
-        assertEquals(request.getFirstName(), result.getFirstName());
-        assertEquals(request.getLastName(), result.getLastName());
-        assertEquals(request.getEmail(), result.getEmail());
-        assertEquals(request.getPassword(), result.getPassword());
-
-    }
+    assertEquals(request.getFirstName(), result.getFirstName());
+    assertEquals(request.getLastName(), result.getLastName());
+    assertEquals(request.getEmail(), result.getEmail());
+    assertEquals(request.getPassword(), result.getPassword());
+  }
 }

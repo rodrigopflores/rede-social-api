@@ -11,31 +11,29 @@ import org.springframework.stereotype.Component;
 @Component
 public class PostMapper {
 
-    @Autowired
-    private UserMapper userMapper;
+  private static final ModelMapper modelMapper = new ModelMapper();
+  @Autowired private UserMapper userMapper;
 
-    private static ModelMapper modelMapper = new ModelMapper();
+  public Post toDomain(CreatePostRequest request) {
+    Post post = new Post();
+    post.setMessage(request.getMessage());
+    post.setImage(request.getImage());
+    post.setPrivatePost(request.isPrivatePost());
 
-    public Post toDomain(CreatePostRequest request) {
-        Post post = new Post();
-        post.setMessage(request.getMessage());
-        post.setImage(request.getImage());
-        post.setPrivatePost(request.isPrivatePost());
+    return post;
+  }
 
-        return post;
-    }
+  public PostResponse toPostResponse(Post post) {
+    UserStandardResponse user = userMapper.toUserStandardResponse(post.getUser());
 
-    public PostResponse toPostResponse(Post post) {
-        UserStandardResponse user = userMapper.toUserStandardResponse(post.getUser());
+    PostResponse response = new PostResponse();
+    response.setId(post.getId());
+    response.setMessage(post.getMessage());
+    response.setTime(post.getTime());
+    response.setImage(post.getImage());
+    response.setPrivatePost(post.isPrivatePost());
+    response.setUser(user);
 
-        PostResponse response = new PostResponse();
-        response.setId(post.getId());
-        response.setMessage(post.getMessage());
-        response.setTime(post.getTime());
-        response.setImage(post.getImage());
-        response.setPrivatePost(post.isPrivatePost());
-        response.setUser(user);
-
-        return response;
-    }
+    return response;
+  }
 }

@@ -20,36 +20,35 @@ import java.util.stream.Collectors;
 @Service
 public class CommentService {
 
-    @Autowired
-    private CommentRepository repository;
+  @Autowired private CommentRepository repository;
 
-    @Autowired
-    private CommentMapper mapper;
+  @Autowired private CommentMapper mapper;
 
-    @Autowired
-    private UserService userService;
+  @Autowired private UserService userService;
 
-    @Autowired
-    private PostService postService;
+  @Autowired private PostService postService;
 
-    public CommentResponse createComment(CreateCommentRequest request) {
-        User commenter = userService.getUser();
-        Post post = postService.getValidatedPostById(request.getPostId());
+  public CommentResponse createComment(CreateCommentRequest request) {
+    User commenter = userService.getUser();
+    Post post = postService.getValidatedPostById(request.getPostId());
 
-        Comment comment = mapper.toDomain(request, commenter, post);
-        comment.setTime(LocalDateTime.now());
-        comment = repository.save(comment);
+    Comment comment = mapper.toDomain(request, commenter, post);
+    comment.setTime(LocalDateTime.now());
+    comment = repository.save(comment);
 
-        return mapper.toCommentResponse(comment);
-    }
+    return mapper.toCommentResponse(comment);
+  }
 
-    public Page<CommentResponse> getPostComments(Integer postId, Pageable pageable) {
-        Post post = postService.getValidatedPostById(postId);
+  public Page<CommentResponse> getPostComments(Integer postId, Pageable pageable) {
+    Post post = postService.getValidatedPostById(postId);
 
-        Page<Comment> commentPage = repository.findByPostIdOrderByTimeAsc(postId, pageable);
-        List<CommentResponse> commentResponseList = commentPage.get().map(comment -> mapper.toCommentResponse(comment)).collect(Collectors.toList());
+    Page<Comment> commentPage = repository.findByPostIdOrderByTimeAsc(postId, pageable);
+    List<CommentResponse> commentResponseList =
+        commentPage
+            .get()
+            .map(comment -> mapper.toCommentResponse(comment))
+            .collect(Collectors.toList());
 
-        return new PageImpl<>(commentResponseList, pageable, commentPage.getTotalElements());
-    }
-
+    return new PageImpl<>(commentResponseList, pageable, commentPage.getTotalElements());
+  }
 }

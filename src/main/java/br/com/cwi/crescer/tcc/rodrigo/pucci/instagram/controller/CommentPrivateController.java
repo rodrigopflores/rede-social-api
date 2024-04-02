@@ -11,24 +11,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/privado/comment")
 public class CommentPrivateController {
 
-    @Autowired
-    private CommentService service;
+  @Autowired private CommentService service;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CommentResponse createComment(@Valid @RequestBody CreateCommentRequest request) {
-        return service.createComment(request);
-    }
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public CommentResponse createComment(@Valid @RequestBody CreateCommentRequest request) {
+    return service.createComment(request);
+  }
 
-    @GetMapping("/{postId}")
-    @ResponseStatus(HttpStatus.OK)
-    public Page<CommentResponse> getPostComments(@PathVariable Integer postId, @RequestParam Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return service.getPostComments(postId, pageable);
-    }
+  @GetMapping("/{postId}")
+  @ResponseStatus(HttpStatus.OK)
+  public Page<CommentResponse> getPostComments(
+      @PathVariable Integer postId, @RequestParam Integer page, Integer size) {
+    Pageable pageable = PageRequest.of(page, size);
+    return service.getPostComments(postId, pageable);
+  }
 }

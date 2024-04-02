@@ -7,9 +7,8 @@ import lombok.Setter;
 @Setter
 public class ChangeUserInfoRequest {
 
-    private String firstName;
-    private String lastName;
-    private String nickName;
-    private String profilePic;
-
+  private String firstName;
+  private String lastName;
+  private String nickName;
+  private String profilePic;
 }

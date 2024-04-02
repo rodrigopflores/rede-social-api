@@ -13,77 +13,73 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/privado/user")
 public class UserPrivateController {
 
-    @Autowired
-    private UserService service;
+  @Autowired private UserService service;
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public UserStandardResponse getStandardUser() {
-        return service.getStandardUser();
-    }
+  @GetMapping
+  @ResponseStatus(HttpStatus.OK)
+  public UserStandardResponse getStandardUser() {
+    return service.getStandardUser();
+  }
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void changeUserInformation(@RequestBody ChangeUserInfoRequest request) {
-        service.changeUserInfo(request);
-    }
+  @PutMapping
+  @ResponseStatus(HttpStatus.OK)
+  public void changeUserInformation(@RequestBody ChangeUserInfoRequest request) {
+    service.changeUserInfo(request);
+  }
 
+  @GetMapping("/{userId}")
+  @ResponseStatus(HttpStatus.OK)
+  public UserProfileResponse getUserProfile(@PathVariable Integer userId) {
+    return service.getUserProfile(userId);
+  }
 
-    @GetMapping("/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public UserProfileResponse getUserProfile(@PathVariable Integer userId) {
-        return service.getUserProfile(userId);
-    }
+  @GetMapping("/friends")
+  @ResponseStatus(HttpStatus.OK)
+  public Page<UserStandardResponse> getUserFriendsPage(@RequestParam Integer page, Integer size) {
+    Pageable pageable = PageRequest.of(page, size);
+    return service.getUserFriendsPage(pageable);
+  }
 
-    @GetMapping("/friends")
-    @ResponseStatus(HttpStatus.OK)
-    public Page<UserStandardResponse> getUserFriendsPage(@RequestParam Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return service.getUserFriendsPage(pageable);
-    }
+  @DeleteMapping("/friends")
+  @ResponseStatus(HttpStatus.OK)
+  public void endFriendship(@RequestParam Integer id) {
+    service.endFriendship(id);
+  }
 
-    @DeleteMapping("/friends")
-    @ResponseStatus(HttpStatus.OK)
-    public void endFriendship(@RequestParam Integer id) {
-        service.endFriendship(id);
-    }
+  @PostMapping("/friend-request")
+  @ResponseStatus(HttpStatus.OK)
+  public void sendFriendRequest(@RequestParam Integer id) {
+    service.sendFriendRequest(id);
+  }
 
-    @PostMapping("/friend-request")
-    @ResponseStatus(HttpStatus.OK)
-    public void sendFriendRequest(@RequestParam Integer id) {
-        service.sendFriendRequest(id);
-    }
+  @GetMapping("/friend-request")
+  @ResponseStatus(HttpStatus.OK)
+  public Page<UserStandardResponse> getFriendRequests(@RequestParam Integer page, Integer size) {
+    Pageable pageable = PageRequest.of(page, size);
+    return service.getFriendRequests(pageable);
+  }
 
-    @GetMapping("/friend-request")
-    @ResponseStatus(HttpStatus.OK)
-    public Page<UserStandardResponse> getFriendRequests(@RequestParam Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return service.getFriendRequests(pageable);
-    }
+  @PutMapping("/friend-request")
+  @ResponseStatus(HttpStatus.OK)
+  public void answerFriendRequest(@Valid @RequestBody AnswerFriendRequestRequest request) {
+    service.answerFriendRequest(request);
+  }
 
-    @PutMapping("/friend-request")
-    @ResponseStatus(HttpStatus.OK)
-    public void answerFriendRequest(@Valid @RequestBody AnswerFriendRequestRequest request) {
-        service.answerFriendRequest(request);
-    }
+  @DeleteMapping("/friend-request")
+  @ResponseStatus(HttpStatus.OK)
+  public void cancelFriendRequest(@RequestParam Integer id) {
+    service.cancelFriendRequest(id);
+  }
 
-    @DeleteMapping("/friend-request")
-    @ResponseStatus(HttpStatus.OK)
-    public void cancelFriendRequest(@RequestParam Integer id) {
-        service.cancelFriendRequest(id);
-    }
-
-    @GetMapping("/search")
-    @ResponseStatus(HttpStatus.OK)
-    public Page<UserProfileResponse> searchUser(@RequestParam Integer page, Integer size, String query) {
-        Pageable pageable = PageRequest.of(page, size);
-        return service.searchUser(query, pageable);
-    }
-
-
+  @GetMapping("/search")
+  @ResponseStatus(HttpStatus.OK)
+  public Page<UserProfileResponse> searchUser(
+      @RequestParam Integer page, Integer size, String query) {
+    Pageable pageable = PageRequest.of(page, size);
+    return service.searchUser(query, pageable);
+  }
 }

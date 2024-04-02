@@ -1,5 +1,9 @@
 package br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.mapper;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.Comment;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.Post;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain.User;
@@ -15,62 +19,55 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class CommentMapperTest {
 
-    @InjectMocks
-    private CommentMapper mapper;
+  @InjectMocks private CommentMapper mapper;
 
-    @Mock
-    private UserMapper userMapper;
+  @Mock private UserMapper userMapper;
 
-    @Test
-    public void deveRetornarCommentQuandoInformadoCreateCommentRequestUserEPost() {
+  @Test
+  public void deveRetornarCommentQuandoInformadoCreateCommentRequestUserEPost() {
 
-        // Arrange
+    // Arrange
 
-        CreateCommentRequest request = CommentFixture.createCommentRequest();
-        User commenter = UserFixture.user();
-        Post post = PostFixture.post();
+    CreateCommentRequest request = CommentFixture.createCommentRequest();
+    User commenter = UserFixture.user();
+    Post post = PostFixture.post();
 
-        // Act
+    // Act
 
-        Comment result = mapper.toDomain(request, commenter, post);
+    Comment result = mapper.toDomain(request, commenter, post);
 
-        // Assert
+    // Assert
 
-        assertEquals(request.getContent(), result.getContent());
-        assertEquals(commenter.getId(), result.getCommenter().getId());
-        assertEquals(post.getId(), result.getPost().getId());
-    }
+    assertEquals(request.getContent(), result.getContent());
+    assertEquals(commenter.getId(), result.getCommenter().getId());
+    assertEquals(post.getId(), result.getPost().getId());
+  }
 
-    @Test
-    public void toCommentResponse() {
+  @Test
+  public void toCommentResponse() {
 
-        // Arrange
+    // Arrange
 
-        Comment comment = CommentFixture.comment();
-        UserStandardResponse commenter = UserFixture.userStandardResponse();
+    Comment comment = CommentFixture.comment();
+    UserStandardResponse commenter = UserFixture.userStandardResponse();
 
-        // Act
+    // Act
 
-        when(userMapper.toUserStandardResponse(comment.getCommenter()))
-                .thenReturn(commenter);
+    when(userMapper.toUserStandardResponse(comment.getCommenter())).thenReturn(commenter);
 
-        CommentResponse result = mapper.toCommentResponse(comment);
+    CommentResponse result = mapper.toCommentResponse(comment);
 
-        verify(userMapper).toUserStandardResponse(comment.getCommenter());
+    verify(userMapper).toUserStandardResponse(comment.getCommenter());
 
-        // Assert
+    // Assert
 
-        assertEquals(comment.getId(), result.getId());
-        assertEquals(comment.getContent(), result.getContent());
-        assertEquals(comment.getTime(), result.getTime());
-        assertEquals(commenter.getId(), result.getCommenter().getId());
-        assertEquals(comment.getPost().getId(), result.getPostId());
-    }
+    assertEquals(comment.getId(), result.getId());
+    assertEquals(comment.getContent(), result.getContent());
+    assertEquals(comment.getTime(), result.getTime());
+    assertEquals(commenter.getId(), result.getCommenter().getId());
+    assertEquals(comment.getPost().getId(), result.getPostId());
+  }
 }

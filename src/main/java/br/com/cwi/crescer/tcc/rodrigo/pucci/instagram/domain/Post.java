@@ -1,12 +1,11 @@
 package br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.domain;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -15,32 +14,30 @@ import java.util.List;
 @Table(name = "tcc_post")
 public class Post {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    @Column(name = "message")
-    private String message;
+  @Column(name = "message")
+  private String message;
 
-    @Column(name = "image")
-    private String image;
+  @Column(name = "image")
+  private String image;
 
-    @Column(name = "post_time")
-    private LocalDateTime time;
+  @Column(name = "post_time")
+  private LocalDateTime time;
 
-    @Column(name = "is_private")
-    private boolean privatePost;
+  @Column(name = "is_private")
+  private boolean privatePost;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tcc_likes",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> likes;
-
-
+  @ManyToMany
+  @JoinTable(
+      name = "tcc_likes",
+      joinColumns = @JoinColumn(name = "post_id"),
+      inverseJoinColumns = @JoinColumn(name = "user_id"))
+  private List<User> likes;
 }
