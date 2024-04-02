@@ -11,12 +11,23 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+/**
+ * TokenService class. This class is responsible for generating and validating JWT tokens. It is
+ * annotated with @Service to indicate that it is a Spring Bean.
+ */
 @Service
 public class TokenService {
 
+  /** Secret key for JWT token generation and validation. */
   @Value("${api.security.token.secret}")
   private String secret;
 
+  /**
+   * Generates a JWT token for a given user.
+   *
+   * @param user The User object for which the token is to be generated.
+   * @return The generated JWT token as a String.
+   */
   public String generateToken(User user) {
     try {
       Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -32,6 +43,12 @@ public class TokenService {
     }
   }
 
+  /**
+   * Validates a given JWT token.
+   *
+   * @param token The JWT token to be validated.
+   * @return The subject of the JWT token if it is valid, otherwise an empty string.
+   */
   public String validateToken(String token) {
     try {
       Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -41,6 +58,12 @@ public class TokenService {
     }
   }
 
+  /**
+   * Generates an expiration date for the JWT token. The expiration date is 2 hours from the current
+   * time.
+   *
+   * @return The expiration date as an Instant object.
+   */
   private Instant genExpirationDate() {
     return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
   }

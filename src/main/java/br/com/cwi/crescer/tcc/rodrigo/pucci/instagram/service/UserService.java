@@ -9,6 +9,8 @@ import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.Cha
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.CreateUserRequest;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.UserProfileResponse;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.UserStandardResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,34 +22,55 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+/**
+ * UserService class. This class is responsible for handling operations related to users. It is
+ * annotated with @Service to indicate that it is a Spring Bean.
+ */
 @Service
 public class UserService implements UserDetailsService {
 
+  /** UserRepository object used for user operations. */
   @Autowired private UserRepository repository;
 
+  /** UserMapper object used for mapping between domain and representation objects. */
   @Autowired private UserMapper mapper;
 
+  /** BCryptPasswordEncoder object used for password encoding. */
   @Autowired private BCryptPasswordEncoder encoder;
 
+  /**
+   * Loads a user by their email.
+   *
+   * @param email The email of the user.
+   * @return The UserDetails object.
+   * @throws UsernameNotFoundException If the user is not found.
+   */
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     var teste = repository.findByEmail(email);
     return teste.orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found"));
   }
 
+  /**
+   * Creates a user.
+   *
+   * @param request The CreateUserRequest object containing the details of the user to be created.
+   * @return The created UserStandardResponse object.
+   */
   public UserStandardResponse createUser(CreateUserRequest request) {
     User user = mapper.toDomain(request);
     System.out.println(user);
     user.setPassword(encoder.encode(request.getPassword()));
     System.out.println(user.getPassword());
     user = repository.save(user);
-
     return mapper.toUserStandardResponse(user);
   }
 
+  /**
+   * Retrieves the currently logged in user.
+   *
+   * @return The User object.
+   */
   public User getUser() {
     User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     return repository
@@ -55,11 +78,22 @@ public class UserService implements UserDetailsService {
         .orElseThrow(() -> new BusinessValidationException("User not found"));
   }
 
+  /**
+   * Retrieves the standard representation of the currently logged in user.
+   *
+   * @return The UserStandardResponse object.
+   */
   public UserStandardResponse getStandardUser() {
     User user = getUser();
     return mapper.toUserStandardResponse(user);
   }
 
+  /**
+   * Retrieves a user by their id.
+   *
+   * @param id The id of the user.
+   * @return The User object.
+   */
   public User getValidatedUserById(Integer id) {
     User foundUser = repository.findById(id).orElse(null);
     if (foundUser == null) {
@@ -69,6 +103,12 @@ public class UserService implements UserDetailsService {
     return foundUser;
   }
 
+  /**
+   * Retrieves the friends of the currently logged in user.
+   *
+   * @param pageable The pagination information.
+   * @return A page of UserStandardResponse objects.
+   */
   public Page<UserStandardResponse> getUserFriendsPage(Pageable pageable) {
     if (pageable.getPageSize() > 50) {
       throw new BusinessValidationException("Too many pages");
@@ -83,6 +123,11 @@ public class UserService implements UserDetailsService {
     return new PageImpl<>(friendsPageAsList, pageable, friendsPage.getTotalElements());
   }
 
+  /**
+   * Sends a friend request to a user.
+   *
+   * @param id The id of the user.
+   */
   public void sendFriendRequest(Integer id) {
     User user = getUser();
     User friend = getValidatedUserById(id);
@@ -90,6 +135,12 @@ public class UserService implements UserDetailsService {
     repository.save(user);
   }
 
+  /**
+   * Retrieves the friend requests of the currently logged in user.
+   *
+   * @param pageable The pagination information.
+   * @return A page of UserStandardResponse objects.
+   */
   public Page<UserStandardResponse> getFriendRequests(Pageable pageable) {
     User user = getUser();
     Page<User> friendRequestsReceivedPage =
@@ -104,6 +155,12 @@ public class UserService implements UserDetailsService {
         friendRequestsPageAsList, pageable, friendRequestsReceivedPage.getTotalElements());
   }
 
+  /**
+   * Answers a friend request.
+   *
+   * @param request The AnswerFriendRequestRequest object containing the details of the friend
+   *     request to be answered.
+   */
   public void answerFriendRequest(AnswerFriendRequestRequest request) {
     User user = getUser();
     User friend = getValidatedUserById(request.getFriendId());
@@ -123,6 +180,11 @@ public class UserService implements UserDetailsService {
     repository.save(friend);
   }
 
+  /**
+   * Ends a friendship with a user.
+   *
+   * @param id The id of the user.
+   */
   public void endFriendship(Integer id) {
     User user = getUser();
     User friend = getValidatedUserById(id);
@@ -139,6 +201,13 @@ public class UserService implements UserDetailsService {
     repository.save(friend);
   }
 
+  /**
+   * Checks if two users are friends.
+   *
+   * @param id1 The id of the first user.
+   * @param id2 The id of the second user.
+   * @return True if the users are friends, false otherwise.
+   */
   public boolean areFriends(Integer id1, Integer id2) {
     User user1 = repository.findById(id1).orElse(null);
     User user2 = repository.findById(id2).orElse(null);
@@ -146,10 +215,23 @@ public class UserService implements UserDetailsService {
     return user1.getFriends().contains(user2);
   }
 
+  /**
+   * Retrieves a user by their id.
+   *
+   * @param id The id of the user.
+   * @return The User object.
+   */
   public User getUserById(Integer id) {
     return repository.findById(id).orElse(null);
   }
 
+  /**
+   * Searches for a user.
+   *
+   * @param request The search string.
+   * @param pageable The pagination information.
+   * @return A page of UserProfileResponse objects.
+   */
   public Page<UserProfileResponse> searchUser(String request, Pageable pageable) {
     User user = getUser();
     Page<User> resultPage = repository.searchUserByString(request, user.getId(), pageable);
@@ -170,6 +252,12 @@ public class UserService implements UserDetailsService {
     return new PageImpl<>(resultList, pageable, resultPage.getTotalElements());
   }
 
+  /**
+   * Retrieves the profile of a user.
+   *
+   * @param userId The id of the user.
+   * @return The UserProfileResponse object.
+   */
   public UserProfileResponse getUserProfile(Integer userId) {
     User user = getUser();
     User profileUser = getValidatedUserById(userId);
@@ -183,6 +271,11 @@ public class UserService implements UserDetailsService {
     return response;
   }
 
+  /**
+   * Cancels a friend request.
+   *
+   * @param id The id of the user.
+   */
   public void cancelFriendRequest(Integer id) {
     User user = getUser();
     User friend = getValidatedUserById(id);
@@ -190,6 +283,11 @@ public class UserService implements UserDetailsService {
     repository.save(user);
   }
 
+  /**
+   * Changes the information of a user.
+   *
+   * @param request The ChangeUserInfoRequest object containing the new information of the user.
+   */
   public void changeUserInfo(ChangeUserInfoRequest request) {
     User user = getUser();
     String firstName = request.getFirstName();

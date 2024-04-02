@@ -14,6 +14,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controller for public user operations. All endpoints in this controller do not require
+ * authentication.
+ */
 @RestController
 @RequestMapping("/publico/user")
 public class UserPublicController {
@@ -24,12 +28,24 @@ public class UserPublicController {
 
   @Autowired private AuthenticationManager authenticationManager;
 
+  /**
+   * Create a new user.
+   *
+   * @param request CreateUserRequest object containing the new user data.
+   * @return UserStandardResponse object containing the created user data.
+   */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public UserStandardResponse createUser(@Valid @RequestBody CreateUserRequest request) {
     return service.createUser(request);
   }
 
+  /**
+   * Login a user.
+   *
+   * @param request LoginRequest object containing the user's login data.
+   * @return LoginResponse object containing the login response data.
+   */
   @PostMapping("/login")
   @ResponseStatus(HttpStatus.OK)
   public LoginResponse login(@Valid @RequestBody LoginRequest request) {

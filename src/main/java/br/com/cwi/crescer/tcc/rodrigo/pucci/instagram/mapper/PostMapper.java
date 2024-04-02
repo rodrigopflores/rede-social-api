@@ -8,12 +8,25 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * PostMapper class. This class is responsible for mapping between Post domain objects and Post
+ * representation objects.
+ */
 @Component
 public class PostMapper {
 
+  /** ModelMapper object used for object mapping. */
   private static final ModelMapper modelMapper = new ModelMapper();
+
+  /** UserMapper object used for mapping User objects. */
   @Autowired private UserMapper userMapper;
 
+  /**
+   * Maps a CreatePostRequest object to a Post object.
+   *
+   * @param request The CreatePostRequest object containing the data for the new post.
+   * @return The Post object.
+   */
   public Post toDomain(CreatePostRequest request) {
     Post post = new Post();
     post.setMessage(request.getMessage());
@@ -23,6 +36,12 @@ public class PostMapper {
     return post;
   }
 
+  /**
+   * Maps a Post object to a PostResponse object.
+   *
+   * @param post The Post object.
+   * @return The PostResponse object.
+   */
   public PostResponse toPostResponse(Post post) {
     UserStandardResponse user = userMapper.toUserStandardResponse(post.getUser());
 
