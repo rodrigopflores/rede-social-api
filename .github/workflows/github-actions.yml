@@ -1,3 +1,5 @@
+name: CI API
+on: push
 jobs:
   build:
     name: Build
