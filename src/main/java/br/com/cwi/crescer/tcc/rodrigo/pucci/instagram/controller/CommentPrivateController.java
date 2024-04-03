@@ -54,7 +54,7 @@ public class CommentPrivateController {
   @GetMapping("/{postId}")
   @ResponseStatus(HttpStatus.OK)
   public Page<CommentResponse> getPostComments(
-          @PathVariable Integer postId, @RequestParam Integer page, Integer size) {
+      @PathVariable Integer postId, @RequestParam Integer page, Integer size) {
     Pageable pageable = PageRequest.of(page, size);
     return service.getPostComments(postId, pageable);
   }

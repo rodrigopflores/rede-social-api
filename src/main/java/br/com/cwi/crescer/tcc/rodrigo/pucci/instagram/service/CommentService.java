@@ -7,15 +7,14 @@ import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.mapper.CommentMapper;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.repository.CommentRepository;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.request.CreateCommentRequest;
 import br.com.cwi.crescer.tcc.rodrigo.pucci.instagram.representation.response.CommentResponse;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * CommentService class. This class is responsible for handling operations related to comments. It

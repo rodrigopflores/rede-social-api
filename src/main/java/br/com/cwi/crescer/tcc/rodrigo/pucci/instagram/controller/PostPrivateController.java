@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Controller for private post operations.
- * All endpoints in this controller require authentication.
+ * Controller for private post operations. All endpoints in this controller require authentication.
  */
 @RestController
 @RequestMapping("privado/post")
@@ -30,6 +29,7 @@ public class PostPrivateController {
 
   /**
    * Create a new post.
+   *
    * @param request CreatePostRequest object containing the new post data.
    * @return PostResponse object containing the created post data.
    */
@@ -41,6 +41,7 @@ public class PostPrivateController {
 
   /**
    * Get a user's posts by their ID.
+   *
    * @param userId The ID of the user.
    * @param page The page number.
    * @param size The size of the page.
@@ -49,13 +50,14 @@ public class PostPrivateController {
   @GetMapping("/{userId}")
   @ResponseStatus(HttpStatus.OK)
   public Page<PostResponse> getUserPosts(
-          @PathVariable Integer userId, @RequestParam Integer page, Integer size) {
+      @PathVariable Integer userId, @RequestParam Integer page, Integer size) {
     Pageable pageable = PageRequest.of(page, size);
     return service.getUserPosts(userId, pageable);
   }
 
   /**
    * Like a post.
+   *
    * @param postId The ID of the post to like.
    */
   @PostMapping("/{postId}/like")
@@ -66,6 +68,7 @@ public class PostPrivateController {
 
   /**
    * Get a user's feed.
+   *
    * @param page The page number.
    * @param size The size of the page.
    * @return A Page object containing PostResponse objects for each post in the feed.
