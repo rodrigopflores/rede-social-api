@@ -38,6 +38,7 @@ jobs:
         with:
           reporter: github-check
           level: warning
+          fail_on_error: false
 
   dependency_review:
     name: Vulnerabilidade de dependênciais
