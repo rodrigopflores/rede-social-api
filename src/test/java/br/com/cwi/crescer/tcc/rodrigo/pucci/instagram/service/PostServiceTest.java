@@ -64,7 +64,7 @@ public class PostServiceTest {
     Mockito.when(repository.save(post)).thenReturn(post);
     Mockito.when(mapper.toPostResponse(post)).thenReturn(response);
 
-    PostResponse result = service.createPost(request);
+    final PostResponse result = service.createPost(request);
 
     Mockito.verify(userService).getUser();
     Mockito.verify(repository).save(post);
@@ -105,7 +105,7 @@ public class PostServiceTest {
         .thenReturn(postsPage);
     Mockito.when(mapper.toPostResponse(post)).thenReturn(response);
 
-    Page<PostResponse> result = service.getUserPosts(userId, pageable);
+    final Page<PostResponse> result = service.getUserPosts(userId, pageable);
 
     Mockito.verify(userService).getUser();
     Mockito.verify(userService).getUserById(userId);

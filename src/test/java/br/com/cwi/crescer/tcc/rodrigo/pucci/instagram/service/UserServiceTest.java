@@ -133,7 +133,7 @@ public class UserServiceTest {
    * retrieves a user by its ID.
    */
   @Test
-  public void deveRetornarUsuarioQuandoInformadoOId() {
+  public void deveRetornarUsuarioQuandoInformadoId() {
 
     // Arrange
 
