@@ -35,7 +35,7 @@ public class CommentMapperTest {
    * CreateCommentRequest object, a User object and a Post object to a Comment object.
    */
   @Test
-  public void deveRetornarCommentQuandoInformadoCreateCommentRequestUserEPost() {
+  public void deveRetornarCommentQuandoInformadoCreateCommentRequestUserPost() {
 
     // Arrange
 
@@ -45,7 +45,7 @@ public class CommentMapperTest {
 
     // Act
 
-    Comment result = mapper.toDomain(request, commenter, post);
+    final Comment result = mapper.toDomain(request, commenter, post);
 
     // Assert
 
@@ -70,7 +70,7 @@ public class CommentMapperTest {
 
     Mockito.when(userMapper.toUserStandardResponse(comment.getCommenter())).thenReturn(commenter);
 
-    CommentResponse result = mapper.toCommentResponse(comment);
+    final CommentResponse result = mapper.toCommentResponse(comment);
 
     Mockito.verify(userMapper).toUserStandardResponse(comment.getCommenter());
 

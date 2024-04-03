@@ -68,7 +68,7 @@ public class CommentServiceTest {
     Mockito.when(repository.save(comment)).thenReturn(comment);
     Mockito.when(mapper.toCommentResponse(comment)).thenReturn(response);
 
-    CommentResponse result = service.createComment(request);
+    final CommentResponse result = service.createComment(request);
 
     Mockito.verify(userService).getUser();
     Mockito.verify(postService).getValidatedPostById(request.getPostId());
@@ -86,7 +86,7 @@ public class CommentServiceTest {
    * retrieves the comments of a post.
    */
   @Test
-  public void deveRestornarPageDeCommentResponseQuandoInformarPostIdEPageable() {
+  public void deveRestornarPageDeCommentResponseQuandoInformarPostIdePageable() {
 
     // Arrange
 
@@ -104,7 +104,7 @@ public class CommentServiceTest {
     Mockito.when(repository.findByPostIdOrderByTimeAsc(postId, pageable)).thenReturn(commentPage);
     Mockito.when(mapper.toCommentResponse(comment)).thenReturn(response);
 
-    Page<CommentResponse> result = service.getPostComments(postId, pageable);
+    final Page<CommentResponse> result = service.getPostComments(postId, pageable);
 
     Mockito.verify(postService).getValidatedPostById(postId);
     Mockito.verify(repository).findByPostIdOrderByTimeAsc(postId, pageable);

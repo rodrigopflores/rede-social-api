@@ -81,7 +81,7 @@ public class PostServiceTest {
    */
   @Test
   public void
-      deveRetornarPageDePostResponsePublicosEPrivadosDeAmigoQuandoInformarUserIdEPageable() {
+      deveRetornarPageDePostResponsePublicosePrivadosDeAmigoQuandoInformarUserIdePageable() {
 
     // Arrange
 
@@ -123,8 +123,7 @@ public class PostServiceTest {
    * retrieves the public posts of a user who is not a friend.
    */
   @Test
-  public void
-      deveRetornarPageDePostResponseApenasPublicosDeUserQuandoNaoForAmigoEInformarUserIdEPageable() {
+  public void deveRetornarPagePostResponsePublicosDeUserQuandoNaoForAmigoeInformarUserId() {
 
     // Arrange
 
@@ -148,7 +147,7 @@ public class PostServiceTest {
         .thenReturn(postsPage);
     Mockito.when(mapper.toPostResponse(post)).thenReturn(response);
 
-    Page<PostResponse> result = service.getUserPosts(userId, pageable);
+    final Page<PostResponse> result = service.getUserPosts(userId, pageable);
 
     Mockito.verify(userService).getUser();
     Mockito.verify(userService).getUserById(userId);
@@ -178,7 +177,7 @@ public class PostServiceTest {
 
     Mockito.when(repository.findById(id)).thenReturn(Optional.of(post));
 
-    Post result = service.getValidatedPostById(id);
+    final Post result = service.getValidatedPostById(id);
 
     Mockito.verify(repository).findById(id);
 
@@ -203,7 +202,7 @@ public class PostServiceTest {
 
     Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
 
-    Post result = service.getValidatedPostById(id);
+    final Post result = service.getValidatedPostById(id);
 
     Mockito.verify(repository).findById(id);
   }
@@ -283,7 +282,7 @@ public class PostServiceTest {
         .thenReturn(feedPage);
     Mockito.when(mapper.toPostResponse(post)).thenReturn(response);
 
-    Page<PostResponse> result = service.getUserFeed(pageable);
+    final Page<PostResponse> result = service.getUserFeed(pageable);
 
     Mockito.verify(userService).getUser();
     Mockito.verify(repository)

@@ -40,7 +40,7 @@ public class PostMapperTest {
 
     // Act
 
-    Post result = mapper.toDomain(request);
+    final Post result = mapper.toDomain(request);
 
     // Assert
 
@@ -66,7 +66,7 @@ public class PostMapperTest {
     Mockito.when(userMapper.toUserStandardResponse(post.getUser()))
         .thenReturn(userStandardResponse);
 
-    PostResponse result = mapper.toPostResponse(post);
+    final PostResponse result = mapper.toPostResponse(post);
 
     Mockito.verify(userMapper).toUserStandardResponse(post.getUser());
 

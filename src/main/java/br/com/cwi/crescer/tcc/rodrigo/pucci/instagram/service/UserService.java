@@ -211,7 +211,9 @@ public class UserService implements UserDetailsService {
   public boolean areFriends(Integer id1, Integer id2) {
     User user1 = repository.findById(id1).orElse(null);
     User user2 = repository.findById(id2).orElse(null);
-    if (user1 == null || user2 == null) return false;
+    if (user1 == null || user2 == null) {
+      return false;
+    }
     return user1.getFriends().contains(user2);
   }
 
@@ -290,10 +292,10 @@ public class UserService implements UserDetailsService {
    */
   public void changeUserInfo(ChangeUserInfoRequest request) {
     User user = getUser();
-    String firstName = request.getFirstName();
-    String lastName = request.getLastName();
-    String nickName = request.getNickName();
-    String profilePic = request.getProfilePic();
+    final String firstName = request.getFirstName();
+    final String lastName = request.getLastName();
+    final String nickName = request.getNickName();
+    final String profilePic = request.getProfilePic();
 
     if (!firstName.isEmpty()) {
       user.setFirstName(firstName);

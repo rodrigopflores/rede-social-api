@@ -104,10 +104,10 @@ public class UserServiceTest {
 
     // Arrange
     User user1 = UserFixture.user();
-    Integer id1 = 2;
+    final Integer id1 = 2;
     user1.setId(id1);
     User user2 = UserFixture.user();
-    Integer id2 = 6;
+    final Integer id2 = 6;
     user2.setId(id2);
     user2.setEmail("friend@email.com");
     user1.getFriends().add(user2);
@@ -118,7 +118,7 @@ public class UserServiceTest {
     Mockito.when(repository.findById(id1)).thenReturn(Optional.of(user1));
     Mockito.when(repository.findById(id2)).thenReturn(Optional.of(user2));
 
-    boolean result = service.areFriends(id1, id2);
+    final boolean result = service.areFriends(id1, id2);
 
     Mockito.verify(repository).findById(id1);
     Mockito.verify(repository).findById(id2);
@@ -145,7 +145,7 @@ public class UserServiceTest {
 
     Mockito.when(repository.findById(id)).thenReturn(Optional.of(user));
 
-    User result = service.getUserById(id);
+    final User result = service.getUserById(id);
 
     // Assert
 

@@ -24,11 +24,11 @@ public class UserMapperTest {
 
     // Arrange
 
-    CreateUserRequest request = UserFixture.createUserRequest();
+    final CreateUserRequest request = UserFixture.createUserRequest();
 
     // Act
 
-    User result = mapper.toDomain(request);
+    final User result = mapper.toDomain(request);
 
     // Assert
 
@@ -49,11 +49,11 @@ public class UserMapperTest {
 
     // Arrange
 
-    User user = UserFixture.user();
+    final User user = UserFixture.user();
 
     // Act
 
-    UserStandardResponse result = mapper.toUserStandardResponse(user);
+    final UserStandardResponse result = mapper.toUserStandardResponse(user);
 
     // Assert
 
@@ -75,11 +75,11 @@ public class UserMapperTest {
 
     // Arrange
 
-    User user = UserFixture.user();
+    final User user = UserFixture.user();
 
     // Act
 
-    UserProfileResponse result = mapper.toUserProfileResponse(user);
+    final UserProfileResponse result = mapper.toUserProfileResponse(user);
 
     // Assert
 
@@ -105,7 +105,7 @@ public class UserMapperTest {
 
     // Act
 
-    CreateUserSecurityRequest result = mapper.toCreateUserSecurityRequest(request);
+    final CreateUserSecurityRequest result = mapper.toCreateUserSecurityRequest(request);
 
     // Assert
 
