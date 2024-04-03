@@ -1,8 +1,23 @@
 name: CI API
 on: push
 jobs:
+
+  trufflehog:
+    name: Verificação senhas expostas
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Secret Scanning
+      uses: trufflesecurity/trufflehog@main
+      with:
+        extra_args: --only-verified
+
   build:
     name: Build
+    needs: trufflehog
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,29 +56,3 @@ jobs:
           level: warning
           fail_on_error: false
           
-  trufflehog:
-    name: Verificação senhas expostas
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Secret Scanning
-      uses: trufflesecurity/trufflehog@main
-      with:
-        extra_args: --only-verified
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
-      statuses: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Super-linter
-        uses: super-linter/super-linter@v6.3.0 
